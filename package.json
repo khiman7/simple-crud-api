@@ -1,0 +1,28 @@
+{
+  "name": "simple-crud-api",
+  "version": "1.0.0",
+  "description": "Simple CRUD API on pure Node.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khiman7/simple-crud-api.git"
+  },
+  "keywords": [
+    "Node.js",
+    "CRUD",
+    "API"
+  ],
+  "author": "Kyrylo Khiman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khiman7/simple-crud-api/issues"
+  },
+  "homepage": "https://github.com/khiman7/simple-crud-api#readme",
+  "devDependencies": {
+    "jest": "^27.3.1",
+    "nodemon": "^2.0.15"
+  }
+}
