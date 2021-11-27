@@ -4,6 +4,7 @@
   "description": "Simple CRUD API on pure Node.js",
   "main": "app.js",
   "scripts": {
+    "dev": "nodemon app.js",
     "test": "jest"
   },
   "repository": {
@@ -24,5 +25,9 @@
   "devDependencies": {
     "jest": "^27.3.1",
     "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "uuid": "^8.3.2"
   }
 }
