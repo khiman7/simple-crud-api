@@ -41,7 +41,13 @@ class Router {
   _findRoute(pathname, method) {
     const index = this._routes[method].findIndex(route => {
       if (route.pathname instanceof RegExp) {
-        return pathname.match(route.pathname).length > 0; 
+        const matches = pathname.match(route.pathname);
+
+        if (!matches) {
+          return false;
+        }
+
+        return matches.length > 0; 
       } else {
         return route.pathname === pathname;
       }
