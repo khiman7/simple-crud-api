@@ -15,7 +15,17 @@ class Route {
 class Router {
   constructor() { 
     this._routes = {};
-    METHODS.forEach(method => this._routes[method] = []);
+    METHODS.forEach(method => {
+      this._routes[method] = [];
+      /**
+       * Adding registering methods for all HTTP-methods in METHODS variable
+       */
+      this[method.toLowerCase()] = (pathname, handler) => {
+        const route = new Route(pathname, handler);
+
+        this._routes[method].push(route);
+      };
+    });
   }
 
   _routeExists(pathname, method) {
@@ -27,37 +37,14 @@ class Router {
     const { url, method } = req;
 
     if (this._routeExists(url, method)) {
-      const { handler } = this._routes[method];
+      const { handler } = this._routes[method]
+        .find(route => route.pathname === url);
 
       handler(req, res);
     } else {
       res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: '404 Route not found!' }));
+      res.end(JSON.stringify({ message: '404 Route not found' }));
     }
-  }
-
-  get(pathname, handler) {
-    const route = new Route(pathname, handler);
-
-    this._routes['GET'].push(route);
-  }
-
-  post(pathname, handler) {
-    const route = new Route(pathname, handler);
-
-    this._routes['POST'].push(route);
-  }
-
-  put(pathname, handler) {
-    const route = new Route(pathname, handler);
-
-    this._routes['PUT'].push(route);
-  }
-
-  delete(pathname, handler) {
-    const route = new Route(pathname, handler);
-
-    this._routes['DELETE'].push(route);
   }
 };
 
