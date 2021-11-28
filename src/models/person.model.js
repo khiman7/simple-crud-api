@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 
-const persons = require('../db/persons.json');
+let persons = require('../db/persons.json');
 
 class Person {
   async findAll() {
@@ -34,7 +34,7 @@ class Person {
     const index = persons.findIndex(person => person.id === id);
     const deletedPerson = persons[index];
 
-    persons.splice(index, 1);
+    persons = persons.filter(person => person.id !== id);
 
     return deletedPerson;
   }
