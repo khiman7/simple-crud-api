@@ -1,4 +1,4 @@
-const METHODS = [
+const HTTP_METHODS = [
   'GET',
   'POST',
   'PUT',
@@ -15,15 +15,20 @@ class Route {
 class Router {
   constructor() { 
     this._routes = {};
-    METHODS.forEach(method => {
+    HTTP_METHODS.forEach(method => {
       this._routes[method] = [];
-      /**
-       * Adding registering methods for all HTTP-methods in METHODS variable
-       */
       this[method.toLowerCase()] = (pathname, handler) => {
-        const route = new Route(pathname, handler);
+        if (pathname.includes(':')) {
+          const regexpString = pathname.replace(/:(\w+)/g, '(.+)');
+          const regexp = new RegExp(regexpString, 'g');
+          const route = new Route(regexp, handler);
 
-        this._routes[method].push(route);
+          this._routes[method].push(route);
+        } else {
+          const route = new Route(pathname, handler);
+
+          this._routes[method].push(route);
+        }
       };
     });
   }
@@ -32,15 +37,43 @@ class Router {
     return this._routes[method]
       .filter(route => route.pathname === pathname).length > 0;
   }
+
+  _findRoute(pathname, method) {
+    const index = this._routes[method].findIndex(route => {
+      if (route.pathname instanceof RegExp) {
+        return pathname.match(route.pathname).length > 0; 
+      } else {
+        return route.pathname === pathname;
+      }
+    });
+
+    if (index === -1) {
+      return null;
+    } else {
+      return this._routes[method][index];
+    }
+  }
   
   handle(req, res) {
     const { url, method } = req;
 
-    if (this._routeExists(url, method)) {
-      const { handler } = this._routes[method]
-        .find(route => route.pathname === url);
+    const route = this._findRoute(url, method);
 
-      handler(req, res);
+    if (route) {
+      const { pathname, handler } = route;
+
+      if (pathname instanceof RegExp) {
+        /**
+         * TODO: refactor this logic, because it can return wrong paramater
+         */
+        const id = url.split('/').pop();
+
+        req.params = { id };
+
+        handler(req, res);
+      } else {
+        handler(req, res);
+      }
     } else {
       res.writeHead(404, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: '404 Route not found' }));
