@@ -22,11 +22,12 @@ class Person {
   }
 
   async update(id, personData) {
-    const person = persons.find(person => person.id === id);
+    const index = persons.findIndex(person => person.id === id);
+    const person = persons[index];
+    
+    persons[index] = {...person, ...personData};
 
-    person = {...person, ...personData};
-
-    return person;
+    return persons[index];
   }
 
   async delete(id) {
