@@ -16,6 +16,13 @@ const parseBodyData = async (req) => {
   });
 };
 
+const isUuid = (str) => {
+  const uuidRegExp = /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/;
+
+  return uuidRegExp.test(str);
+}
+
 module.exports = {
   parseBodyData,
+  isUuid,
 };
