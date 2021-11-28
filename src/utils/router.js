@@ -69,9 +69,6 @@ class Router {
       const { pathname, handler } = route;
 
       if (pathname instanceof RegExp) {
-        /**
-         * TODO: refactor this logic, because it can return wrong paramater
-         */
         const id = url.split('/').pop();
 
         req.params = { id };
