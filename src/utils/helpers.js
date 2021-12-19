@@ -1,4 +1,4 @@
-const parseBodyData = async (req) => {
+const getBodyData = async (req) => {
   return new Promise((resolve, reject) => {
     try {
       let data = '';
@@ -8,7 +8,7 @@ const parseBodyData = async (req) => {
       });
 
       req.on('end', () => {
-        resolve(JSON.parse(data));
+        resolve(data);
       });
     } catch (err) {
       reject(err);
@@ -23,6 +23,6 @@ const isUuid = (str) => {
 }
 
 module.exports = {
-  parseBodyData,
+  getBodyData,
   isUuid,
 };

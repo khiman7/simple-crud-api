@@ -1,5 +1,5 @@
 const Person = require('../models/person.model');
-const { parseBodyData, isUuid } = require('../utils/helpers');
+const { getBodyData, isUuid } = require('../utils/helpers');
 
 class PersonController {
   /**
@@ -52,7 +52,8 @@ class PersonController {
    */
   async createPerson(req, res) {
     try {
-      const { name, age, hobbies } = await parseBodyData(req);
+      const data = await getBodyData(req);
+      const { name, age, hobbies } = JSON.parse(data);
       const allFieldsFilled = [name, age, hobbies]
         .filter(field => !field).length === 0;
 
@@ -91,7 +92,8 @@ class PersonController {
         res.end(JSON.stringify({ message: `Person with id ${id} not found` }));
       }
 
-      let { name, age, hobbies } = await parseBodyData(req);
+      const data = await getBodyData(req);
+      let { name, age, hobbies } = JSON.parse(data);      
 
       const personData = {
         name: name || person.name,
@@ -129,7 +131,7 @@ class PersonController {
         res.end(JSON.stringify({ message: `Person with id ${id} not found` }));
       }
 
-      const deletedPerson = await Person.delete(id);
+      await Person.delete(id);
 
       res.writeHead(204, { 'Content-Type': 'application/json' });
       res.end();
