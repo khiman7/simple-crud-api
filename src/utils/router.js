@@ -1,9 +1,4 @@
-const HTTP_METHODS = [
-  'GET',
-  'POST',
-  'PUT',
-  'DELETE',
-];
+const { METHODS } = require('http');
 
 class Route {
   constructor(pathname, handler) {
@@ -15,7 +10,12 @@ class Route {
 class Router {
   constructor() { 
     this._routes = {};
-    HTTP_METHODS.forEach(method => {
+    this._HTTP_METHODS = METHODS;
+    this._createRouterMethods();
+  }
+
+  _createRouterMethods() {
+    this._HTTP_METHODS.forEach(method => {
       this._routes[method] = [];
       this[method.toLowerCase()] = (pathname, handler) => {
         if (pathname.includes(':')) {
@@ -31,11 +31,6 @@ class Router {
         }
       };
     });
-  }
-
-  _routeExists(pathname, method) {
-    return this._routes[method]
-      .filter(route => route.pathname === pathname).length > 0;
   }
 
   _findRoute(pathname, method) {
